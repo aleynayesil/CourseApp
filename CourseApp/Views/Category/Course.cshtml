@@ -17,10 +17,13 @@
                 </div>
             </div>
             <div id="list" class="list-group">
+                @foreach (var item in Model.MenuCourses)
+                {
+                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        @item.Title
+                    </a>
+                }
 
-                <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                    Title
-                </a>
 
 
             </div>
@@ -29,12 +32,12 @@
             <div class="row">
 
                 @foreach (var item in Model.MenuCourses)
-                {<div class="col-md-4">
+                {<div id="card" class="col-md-4">
                         <div class="card mb-4 shadow-sm">
 
                             <img src="/Images/@item.Image" />
                             <div class="card-img-overlay">
-                                <a href="#"><i class="bi bi-x-square" style="font-size:22px; color:lightgray"></i></a>
+                                <a id="hide" href="#"><i class="bi bi-x-square" style="font-size:22px; color:lightgray"></i></a>
                             </div>
                             <div class="card-body">
                                 <h3 class="card-header">@item.Title</h3>
@@ -57,57 +60,39 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-            
-                alert("deneme")
-                $('#btn').on("click", function (event) {
-                    event.preventDefault();
-                    const param = { Name: name.value }
-                    $.ajax({
-                        method: 'POST',
-                        url: '/send-comment',
-                        data: JSON.stringify(param),
-                        contentType: 'application/json',
-                        success: function (response) {
-                            const catTemplate = ` <a href="#" class="list-group-item list-group-item-action " >
-                     ${name.value}
-                   </a>`;
-                            $('#list').append(catTemplate);
-                            alert(response?.message);
-                        }, error: function (err) {
-                            console.log("err", err);
-                        }
-                    });
-                });
 
+
+            $('#btn').on("click", function (event) {
+                event.preventDefault();
+                const param = { Name: name.value }
+                $.ajax({
+                    method: 'POST',
+                    url: '/send-comment',
+                    data: JSON.stringify(param),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        const catTemplate = ` <a href="#" class="list-group-item list-group-item-action " >
+                         ${name.value}
+                       </a>`;
+                        $('#list').before(catTemplate);
+                        alert(response?.message);
+
+                        $('#commentForm').trigger("reset");
+
+                    }, error: function (err) {
+                        console.log("err", err);
+                    }
+                });
             });
+
+            $('#hide').click(function () {
+                confirm("silmek istediğinize emin misiniz?")
+                $('#card').hide();
+            });
+        });
+
+
     </script>
 }
-    @*//
-
-    //    $('#cat').on("submit", function (event) {
-    //        event.preventDefault();
-    //        const param = {
-    //            Name: Name.target.value
-    //        }
-
-    //        $.ajax({
-    //            method: 'POST',
-    //            url: '/send-comment',
-    //            data: JSON.stringify(param),
-    //            contentType: 'application/json',
-    //            success: function (param) {
-    //                const catTemplate = ` <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-    //                ${param}
-    //
-</a>`;
-    //                $('#list').append(catTemplate);
-    //                alert("başarılı");
-    //            }, error: function (err) {
-    //                console.log(err);
-    //            }
-
-    //        })
-    //    })
-    //})*@
 
 
